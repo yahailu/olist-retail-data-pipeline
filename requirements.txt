@@ -1,0 +1,10 @@
+# === Required Dependencies ===
+pandas==2.2.3   
+numpy==1.26.4
+matplotlib==3.8.4
+sqlalchemy==2.0.39
+mysql-connector-python==8.3.0
+
+# === Optional Dependencies ===
+# pymysql
+# mysqlclient
