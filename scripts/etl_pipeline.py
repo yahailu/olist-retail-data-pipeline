@@ -2,7 +2,27 @@ import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sqlalchemy import create_engine, text
+from dotenv import load_dotenv
 
+load_dotenv()
+
+# ---------------- PHASE 3: MYSQL CONNECTION ----------------
+username = "root"
+password = os.getenv("MYSQL_PASSWORD")
+host = "localhost"
+port = "3306"
+database = "olist_intelligence"
+
+engine = create_engine(
+    f"mysql+pymysql://{username}:{password}@{host}:{port}/{database}"
+)
+
+with engine.connect() as conn:
+    result = conn.execute(text("SELECT DATABASE();"))
+    print("Connected database:", result.scalar())
+
+print("Connected to MySQL successfully.")
 print("ETL pipeline started successfully")
 
 # ---------------- SETUP ----------------
@@ -163,3 +183,25 @@ plt.show()
 
 print("\nPhase 2 completed successfully.")
 print("Charts saved in the visuals folder.")
+
+#Load cleaned data into MySQL
+
+#Load orders table
+orders.to_sql("orders", con=engine, if_exists="replace", index=False)
+print("orders table loaded successfully.")
+
+# Load customers
+customers.to_sql("customers", con=engine, if_exists="replace", index=False)
+print("customers table loaded.")
+
+# Load products
+products.to_sql("products", con=engine, if_exists="replace", index=False)
+print("products table loaded.")
+
+# Load order_items
+order_items.to_sql("order_items", con=engine, if_exists="replace", index=False)
+print("order_items table loaded.")
+
+# Load reviews
+reviews.to_sql("reviews", con=engine, if_exists="replace", index=False)
+print("reviews table loaded.")
